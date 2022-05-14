@@ -166,14 +166,7 @@ function ballHitBrick(ball, brick) {
     killTween.start();
     score += 10;
     scoreText.setText('Pontos: '+score);
-
-    var count_alive = 0;
-    for (i = 0; i < bricks.children.length; i++) {
-        if (bricks.children[i].alive == true) {
-            count_alive++;
-        }
-    }
-    if (count_alive == 0) {
+    if(score === brickInfo.count.row*brickInfo.count.col*10) {
         alert('Você ganhou o jogo. Parabéns!');
         location.reload();
     }
@@ -201,11 +194,12 @@ function ballLeaveScreen() {
 // função de animação da bola com a raquete
 function ballHitPaddle(ball, paddle) {
     ball.animations.play('wobble');
+    ball.body.velocity.x = -1*5*(paddle.x-ball.x);
 }
 
 // função de começar jogo
 function startGame() {
     startButton.destroy();
-    playing = true;
     ball.body.velocity.set(150, -150);
+    playing = true;
 }
