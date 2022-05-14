@@ -136,4 +136,15 @@ function ballHitBrick(ball, brick) {
     brick.kill();
     score += 10;
     scoreText.setText('Pontos: '+score);
+
+    var count_alive = 0;
+    for (i = 0; i < bricks.children.length; i++) {
+        if (bricks.children[i].alive == true) {
+            count_alive++;
+        }
+    }
+    if (count_alive == 0) {
+        alert('Você ganhou o jogo, parabéns!');
+        location.reload();
+    }
 }
