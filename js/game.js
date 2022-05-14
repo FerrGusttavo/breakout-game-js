@@ -23,6 +23,10 @@ var lives = 3;
 var livesText;
 var lifeLostText;
 
+// variáveis globais de botões
+var playing = false;
+var startButton;
+
 // cuida de pré-carregar os ativos
 function preload() {
 
@@ -40,6 +44,9 @@ function preload() {
 
     // carrega sprite do tijolo
     game.load.image('brick', 'img/brick.png');
+
+    // carrega sprite do botão start
+    game.load.spritesheet('button', 'img/button.png', 120, 40);
 }
 
 // é executado uma vez quando tudo está carregado e pronto
@@ -60,9 +67,6 @@ function create() {
 
     // adiciona nossa bola ao sistema de física
     game.physics.enable(ball, Phaser.Physics.ARCADE);
-
-    // ajusta a velocidade da bola
-    ball.body.velocity.set(150, -150);
 
     // habilita colisão com os limites de tela estabelecidos
     ball.body.collideWorldBounds = true;
@@ -103,6 +107,10 @@ function create() {
     lifeLostText = game.add.text(game.world.width*0.5, game.world.height*0.5, 'Você perdeu 1 vida, clique para continuar ', textStyle);
     lifeLostText.anchor.set(0.5);
     lifeLostText.visible = false;
+
+    // adiciona o sprite de start na tela chamando a função startGame()
+    startButton = game.add.button(game.world.width*0.5, game.world.height*0.5, 'button', startGame, this, 1, 0, 2);
+    startButton.anchor.set(0.5);
 }
 // é executado em cada quadro.
 function update() {
@@ -114,7 +122,9 @@ function update() {
     game.physics.arcade.collide(ball, bricks, ballHitBrick);
     
     // adiciona a função de movimento e ponto inicial na raquete
-    paddle.x = game.input.x || game.world.width*0.5;
+    if(playing) {
+        paddle.x = game.input.x || game.world.width*0.5;
+    }
 }
 
 // função para imprimir cada tijolo na sua posição correta
@@ -188,6 +198,14 @@ function ballLeaveScreen() {
     }
 }
 
+// função de animação da bola com a raquete
 function ballHitPaddle(ball, paddle) {
     ball.animations.play('wobble');
+}
+
+// função de começar jogo
+function startGame() {
+    startButton.destroy();
+    playing = true;
+    ball.body.velocity.set(150, -150);
 }
