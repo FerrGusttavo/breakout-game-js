@@ -17,6 +17,12 @@ var brickInfo;
 var scoreText;
 var score = 0;
 
+// variáveis globais das vidas do jogador
+
+var lives = 3;
+var livesText;
+var lifeLostText;
+
 // cuida de pré-carregar os ativos
 function preload() {
 
@@ -64,10 +70,7 @@ function create() {
 
     // verifica o limite da borda e executa função vinculada ao evento
     ball.checkWorldBounds = true;
-    ball.events.onOutOfBounds.add(function(){
-        alert('Game Over!');
-        location.reload();
-    }, this);
+    ball.events.onOutOfBounds.add(ballLeaveScreen, this);
 
     
     // adiciona o spirte da raquete no game
@@ -84,11 +87,21 @@ function create() {
 
     initBricks();
 
-    // adiciona e configura o texto da pontuação
-    scoreText = game.add.text(5, 5, 'Pontos: 0', { 
-        Font: '18px Arial', fill: '#0095DD' });
-}
+    // estilo global para textos
+    textStyle = { font: '18px Arial', fill: '#0095DD'};
 
+    // adiciona e configura o texto da pontuação
+    scoreText = game.add.text(5, 5, 'Pontos: 0', textStyle);
+
+    // adiciona e configura o texto de quantidade de vidas
+    livesText = game.add.text(game.world.width-5, 5, 'Vidas: '+lives, textStyle);
+    livesText.anchor.set(1,0);
+
+    // adiciona e configura o texto de perda de vida
+    lifeLostText = game.add.text(game.world.width*0.5, game.world.height*0.5, 'Vida perdida, clique para continuar ', textStyle);
+    lifeLostText.anchor.set(0.5);
+    lifeLostText.visible = false;
+}
 // é executado em cada quadro.
 function update() {
 
@@ -144,7 +157,26 @@ function ballHitBrick(ball, brick) {
         }
     }
     if (count_alive == 0) {
-        alert('Você ganhou o jogo, parabéns!');
+        alert('Você ganhou o jogo. Parabéns!');
+        location.reload();
+    }
+}
+
+// função ligada ao evento de perder vidas
+function ballLeaveScreen() {
+    lives--;
+    if(lives) {
+        livesText.setText('Vidas: '+lives);
+        lifeLostText.visible = true;
+        ball.reset(game.world.width*0.5, game.world.height-25);
+        paddle.reset(game.world.width*0.5, game.world.height-5);
+        game.input.onDown.addOnce(function(){
+            lifeLostText.visible = false;
+            ball.body.velocity.set(150, -150);
+        }, this);
+    }
+    else {
+        alert('Você perdeu. game over!');
         location.reload();
     }
 }
