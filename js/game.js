@@ -28,6 +28,12 @@ function create() {
     // adiciona nossa bola para o sistema de física
     game.physics.enable(ball, Phaser.Physics.ARCADE);
 
+    // habilita colisão com os limites de tela estabelecidos
+    ball.body.collideWorldBounds = true;
+
+    // faz a bola quicar quando colidir com a parede
+    ball.body.bounce.set(1);
+
     // ajusta a velocidade da bola
     ball.body.velocity.set(150, 150);
 }
