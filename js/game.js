@@ -13,6 +13,10 @@ var bricks;
 var newBrick;
 var brickInfo;
 
+// variável global da pontuação
+var scoreText;
+var score = 0;
+
 // cuida de pré-carregar os ativos
 function preload() {
 
@@ -59,7 +63,7 @@ function create() {
     ball.body.bounce.set(1);
 
     // verifica o limite da borda e executa função vinculada ao evento
-     ball.checkWorldBounds = true;
+    ball.checkWorldBounds = true;
     ball.events.onOutOfBounds.add(function(){
         alert('Game Over!');
         location.reload();
@@ -79,6 +83,10 @@ function create() {
     paddle.body.immovable = true;
 
     initBricks();
+
+    // adiciona e configura o texto da pontuação
+    scoreText = game.add.text(5, 5, 'Pontos: 0', { 
+        Font: '18px Arial', fill: '#0095DD' });
 }
 
 // é executado em cada quadro.
@@ -86,6 +94,9 @@ function update() {
 
     // adiciona colisão da raquete com a bola
     game.physics.arcade.collide(ball, paddle);
+
+    // verifica a colisão entre bola e tijolos
+    game.physics.arcade.collide(ball, bricks, ballHitBrick);
     
     // adiciona a função de movimento e ponto inicial na raquete
     paddle.x = game.input.x || game.world.width*0.5;
@@ -118,4 +129,11 @@ function initBricks() {
             bricks.add(newBrick);
         }
     }
+}
+
+// função que será executada quando a bola bate no tijolo
+function ballHitBrick(ball, brick) {
+    brick.kill();
+    score += 10;
+    scoreText.setText('Pontos: '+score);
 }
