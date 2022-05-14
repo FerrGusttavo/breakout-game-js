@@ -193,7 +193,7 @@ function ballLeaveScreen() {
         }, this);
     }
     else {
-        alert('Você perdeu. game over!');
+        alert('Você perdeu. Game over!');
         location.reload();
     }
 }
