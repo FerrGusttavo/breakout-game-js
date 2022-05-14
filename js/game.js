@@ -17,10 +17,15 @@ function preload() {
 
 // é executado uma vez quando tudo está carregado e pronto
 function create() {
-    
+
     // adiciona o sprite da bola no game
     ball = game.add.sprite(50, 50, 'ball');
 }
 
 // é executado em cada quadro.
-function update() {}
+function update() {
+
+    // move a bola
+    ball.x += 1;
+    ball.y += 1;
+}
