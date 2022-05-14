@@ -46,6 +46,16 @@ function create() {
     // adiciona nossa raquete ao sistema de física
     game.physics.enable(paddle, Phaser.Physics.ARCADE);
 
+    // desativa a colisão com a parede abaixo da raquete = GAME OVER
+    game.physics.arcade.checkCollision.down = false;
+
+    // verifica o limite da borda e executa função vinculada ao evento
+    ball.checkWorldBounds = true;
+    ball.events.onOutOfBounds.add(function(){
+        alert('Game Over!');
+        location.reload();
+    }, this);
+
     // habilita colisão com os limites de tela estabelecidos
     ball.body.collideWorldBounds = true;
 
