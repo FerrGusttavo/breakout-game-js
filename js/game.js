@@ -33,6 +33,7 @@ function preload() {
 
     // carrega sprite da bola
     game.load.image('ball', 'img/ball.png');
+    game.load.spritesheet('ball', 'img/wobble.png', 20, 20);
 
     // carrega sprite da raquete
     game.load.image('paddle', 'img/paddle.png');
@@ -52,6 +53,7 @@ function create() {
 
     // adiciona o sprite da bola no game
     ball = game.add.sprite(game.world.width*0.5, game.world.height-25, 'ball');
+    ball.animations.add('wobble', [0,1,0,2,0,1,0,2,0], 24);
 
     // centraliza a bola no centro
     ball.anchor.set(0.5);
@@ -98,7 +100,7 @@ function create() {
     livesText.anchor.set(1,0);
 
     // adiciona e configura o texto de perda de vida
-    lifeLostText = game.add.text(game.world.width*0.5, game.world.height*0.5, 'Vida perdida, clique para continuar ', textStyle);
+    lifeLostText = game.add.text(game.world.width*0.5, game.world.height*0.5, 'Você perdeu 1 vida, clique para continuar ', textStyle);
     lifeLostText.anchor.set(0.5);
     lifeLostText.visible = false;
 }
@@ -106,7 +108,7 @@ function create() {
 function update() {
 
     // adiciona colisão da raquete com a bola
-    game.physics.arcade.collide(ball, paddle);
+    game.physics.arcade.collide(ball, paddle, ballHitPaddle);
 
     // verifica a colisão entre bola e tijolos
     game.physics.arcade.collide(ball, bricks, ballHitBrick);
@@ -146,7 +148,12 @@ function initBricks() {
 
 // função que será executada quando a bola bate no tijolo
 function ballHitBrick(ball, brick) {
-    brick.kill();
+    var killTween = game.add.tween(brick.scale);
+    killTween.to({x:0,y:0}, 200, Phaser.Easing.Linear.None);
+    killTween.onComplete.addOnce(function(){
+        brick.kill();
+    }, this);
+    killTween.start();
     score += 10;
     scoreText.setText('Pontos: '+score);
 
@@ -179,4 +186,8 @@ function ballLeaveScreen() {
         alert('Você perdeu. game over!');
         location.reload();
     }
+}
+
+function ballHitPaddle(ball, paddle) {
+    ball.animations.play('wobble');
 }
