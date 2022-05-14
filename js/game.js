@@ -3,7 +3,12 @@ var game = new Phaser.Game(480, 320, Phaser.CANVAS, null, {
 });
 
 // cuida de pré-carregar os ativos
-function preload() {}
+function preload() {
+    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    game.scale.pageAlignHorizontally = true;
+    game.scale.pageAlignVertically = true;
+    game.stage.backgroundColor = '#eee';
+}
 
 // é executado uma vez quando tudo está carregado e pronto
 function create() {}
